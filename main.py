@@ -9,7 +9,6 @@ bot_token = 'ODY0MTg1MTcyNzkwMjE0Njk2.YOxxKA.BqqPjCQXf607yV2nXVOZlWfGSUE'
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
 ticker = ['GME', 'BB', 'AMC']
 
-
 @client.event
 async def on_ready():
     print('Bot Ready.')
@@ -23,14 +22,14 @@ async def on_message(message):
         await message.channel.send(view())
 
     elif message.content.startswith('!add'):
-        stockTicker[1] = message.content.split(' ', 1)
-        ticker.append(stockTicker.toUpperCase())
-        await message.channel.send("Added $%s" % stockTicker)
+        messageSplit = message.content.split(' ', 1)
+        ticker.append(messageSplit[1].toUpperCase())
+        await message.channel.send("Added $%s" % messageSplit[1])
 
     elif message.content.startswith('!remove'):
-        stockTicker[1] = message.content.split(' ', 1)
-        ticker.remove(stockTicker.toUpperCase())
-        await message.channel.send("Removed $%s" % stockTicker)
+        messageSplit = message.content.split(' ', 1)
+        ticker.remove(messageSplit[1].toUpperCase())
+        await message.channel.send("Removed $%s" % messageSplit[1])
     
 def view():
     stockPriceOutput  = ""
