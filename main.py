@@ -24,13 +24,13 @@ async def on_message(message):
 
     if message.content.startswith('!add'):
         stockTicker = message.content.split(' ', 1)
-        ticker.append(stockTicker)
-        await message.channel.send("Added ${}" % (stockTicker))
+        ticker.append(stockTicker.toUpperCase())
+        await message.channel.send("Added $%s" % stockTicker)
 
     if message.content.startswith('!remove'):
         stockTicker = message.content.split(' ', 1)
-        ticker.remove(stockTicker)
-        await message.channel.send("Removed ${}" % (stockTicker))
+        ticker.remove(stockTicker.toUpperCase())
+        await message.channel.send("Removed $%s" % stockTicker)
     
 def view():
     stockPriceOutput  = ""
