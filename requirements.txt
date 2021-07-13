@@ -1,2 +1,4 @@
 discord.py
 requests
+asyncpg~=0.23.0
+discord
