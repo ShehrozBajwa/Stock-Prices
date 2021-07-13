@@ -13,4 +13,4 @@ async def on_message(message):
     print('Bot Ready.')
 
 
-bot.run(bot_token)
+client.run(bot_token)
