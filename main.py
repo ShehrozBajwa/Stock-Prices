@@ -16,11 +16,21 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-        if message.author == client.user:
-            return
-        
-        if message.content.startswith('!view'):
-            await message.channel.send(view())
+    if message.author == client.user:
+        return
+
+    if message.content.startswith('!view'):
+        await message.channel.send(view())
+
+    elif message.content.startswith('!add'):
+        stockTicker = message.content.split(' ', 1)
+        ticker.append(stockTicker)
+        await message.channel.send("Added ${}" % stockTicker)
+
+    elif message.content.startswith('!remove'):
+        stockTicker = message.content.split(' ', 1)
+        ticker.remove(stockTicker)
+        await message.channel.send("Removed ${}" % stockTicker)
     
 def view():
     stockPriceOutput  = ""
