@@ -36,13 +36,10 @@ async def on_message(message):
             except:
                 await message.channel.send("Couldn't Find that Stock.")
         else:
+            ticker.remove(messageSplit[1].upper())
             await message.channel.send("That Stock is Already Added.")
             
-            
-        
-            
-        
-
+          
     elif message.content.startswith('!remove allStocks'):
         messageSplit = message.content.split(' ', 1)
         ticker.clear() 
@@ -50,8 +47,8 @@ async def on_message(message):
         
     elif message.content.startswith('!remove'):
         messageSplit = message.content.split(' ', 1)
-        ticker.remove(messageSplit[1].upper())
         try:
+            ticker.remove(messageSplit[1].upper())
             url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
             r = requests.get(url, headers=headers)
             soup = BeautifulSoup(r.text, 'html.parser')
@@ -87,6 +84,9 @@ def duplicates(ticker):
     check = list(set(ticker))
     if len(check) == len(ticker):
         return False
+    else:
+        ticker = list(set(ticker))
+        return True
         
     
                 
