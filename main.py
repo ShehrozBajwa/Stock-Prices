@@ -24,12 +24,24 @@ async def on_message(message):
     elif message.content.startswith('!add'):
         messageSplit = message.content.split(' ', 1)
         ticker.append(messageSplit[1].upper())
-        await message.channel.send("Added $%s" % messageSplit[1])
+        stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find_all('h1').text
+        await message.channel.send("Added %s" % stockName)
 
     elif message.content.startswith('!remove'):
         messageSplit = message.content.split(' ', 1)
         ticker.remove(messageSplit[1].upper())
-        await message.channel.send("Removed $%s" % messageSplit[1])
+        stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find_all('h1').text
+        await message.channel.send("Removed %s" % stockName)
+        
+    elif message.content.startswith('!remove all'):
+        messageSplit = message.content.split(' ', 1)
+        ticker.clear()
+        await message.channel.send("Removed All Stocks.")
+        
+    elif message.content.startswith('!help'):
+        messageSplit = message.content.split(' ', 1)
+        await message.channel.send("Commands:\n!view - View All Stocks.\n!add - Add a Stock\n!remove - Remove a Stock\n!remove all - Remove All Stocks")
+    
     
 def view():
     stockPriceOutput  = ""
@@ -40,10 +52,11 @@ def view():
         stockData = soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('span')
         currPrice = stockData[0].text.strip()
         changeInPrice = stockData[1].text.strip()
+        stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find_all('h1').text
         percent = changeInPrice.split('(', 1)[1].split(')')[0]
         percent = percent.strip('%-+')
         percent = float(percent)
-        stockPriceOutput += "%s:\n    Current Price: %s \n    Change in Price: %s \n\n" % (ticker[i], currPrice, changeInPrice)
+        stockPriceOutput += "%s:\n    Current Price: %s \n    Change in Price: %s \n\n" % (stockName, currPrice, changeInPrice)
     return stockPriceOutput
 
 
