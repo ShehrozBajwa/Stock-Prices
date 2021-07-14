@@ -26,7 +26,7 @@ async def on_message(message):
     elif message.content.startswith('!add'):
         messageSplit = message.content.split(' ', 1)
         ticker.append(messageSplit[1].upper())
-        if duplicates(ticker) == false:
+        if duplicates(ticker) == False:
             try:
                 url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
                 r = requests.get(url, headers=headers)
@@ -86,7 +86,7 @@ def view(ticker):
 def duplicates(ticker):
     check = list(set(ticker))
     if len(check) == len(ticker):
-        return false
+        return False
         
     
                 
