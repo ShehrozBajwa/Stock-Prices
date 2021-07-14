@@ -19,13 +19,13 @@ async def on_message(message):
         return
 
     if message.content.startswith('!view'):
-        ticker = list(set(ticker))
+        list(set(ticker))
         await message.channel.send(view())
 
     elif message.content.startswith('!add'):
         messageSplit = message.content.split(' ', 1)
         ticker.append(messageSplit[1].upper())
-        ticker = list(set(ticker))
+        list(set(ticker))
         try:
             url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
             r = requests.get(url, headers=headers)
@@ -49,7 +49,7 @@ async def on_message(message):
             url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
             r = requests.get(url, headers=headers)
             soup = BeautifulSoup(r.text, 'html.parser')
-            ticker = list(set(ticker))
+            list(set(ticker))
             stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
             await message.channel.send("Removed %s." % stockName)
         except:
