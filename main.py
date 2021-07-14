@@ -15,17 +15,17 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    duplicates(ticker)
+    
     if message.author == client.user:
         return
 
     if message.content.startswith('!view'):
-        list(set(ticker))
-        await message.channel.send(view())
+        await message.channel.send(view(ticker))
 
     elif message.content.startswith('!add'):
         messageSplit = message.content.split(' ', 1)
         ticker.append(messageSplit[1].upper())
-        list(set(ticker))
         try:
             url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
             r = requests.get(url, headers=headers)
@@ -49,7 +49,6 @@ async def on_message(message):
             url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
             r = requests.get(url, headers=headers)
             soup = BeautifulSoup(r.text, 'html.parser')
-            list(set(ticker))
             stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
             await message.channel.send("Removed %s." % stockName)
         except:
@@ -62,8 +61,9 @@ async def on_message(message):
         await message.channel.send("Commands:\n\n!view - View All Stocks.\n!add - Add a Stock\n!remove - Remove a Stock\n!remove allStocks - Remove All Stocks")
     
     
-def view():
+def view(ticker):
     stockPriceOutput  = ""
+    ticker = list(set(ticker))
     for i in range(0, len(ticker)):
         url = 'https://finance.yahoo.com/quote/%s' % ticker[i]
         r = requests.get(url, headers=headers)
@@ -78,5 +78,10 @@ def view():
         stockPriceOutput += "%s:\n        Current Price: %s \n        Change in Price: %s \n\n" % (stockName, currPrice, changeInPrice)
     return stockPriceOutput
 
+
+def duplicates(ticker):
+    ticker = list(set(ticker))
+
+    
 
 client.run(bot_token)
