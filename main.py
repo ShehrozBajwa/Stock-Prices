@@ -1,10 +1,10 @@
-import discord, asyncpg
+import discord, asyncpg, datetime
 from discord.ext import tasks, commands
 from bs4 import BeautifulSoup, BeautifulStoneSoup
 import requests
 
 
-channel_id = 864579823301427221
+channel_id = 864963943164149811
 client = discord.Client()
 bot_token = 'ODY0MTg1MTcyNzkwMjE0Njk2.YOxxKA.BqqPjCQXf607yV2nXVOZlWfGSUE'
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
@@ -13,13 +13,13 @@ ticker = ['GME', 'BB', 'AMC']
 @client.event
 async def on_ready():
     print('Bot Ready.')
-    dailyNotification.start()
+    #dailyNotification.start()
 
   
-@tasks.loop(seconds = 5)
-async def dailyNotification():
-    channel = client.get_channel(channel_id)
-    await channel.send(view(ticker)) 
+#@tasks.loop(hours = 24)
+#async def dailyNotification():
+#    channel = client.get_channel(channel_id)
+#    await channel.send(view(ticker)) 
     
     
 @client.event
@@ -34,7 +34,6 @@ async def on_message(message):
 
     elif message.content.startswith('!add'):
         messageSplit = message.content.split(' ', 1)
-        print(message.channel)
         ticker.append(messageSplit[1].upper())
         if duplicates(ticker) == False: 
             try:
