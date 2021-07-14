@@ -25,12 +25,17 @@ async def on_message(message):
     elif message.content.startswith('!add'):
         messageSplit = message.content.split(' ', 1)
         ticker.append(messageSplit[1].upper())
-        list(set(ticker))
-        url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
-        r = requests.get(url, headers=headers)
-        soup = BeautifulSoup(r.text, 'html.parser')
-        stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
-        await message.channel.send("Added %s" % stockName)
+        ticker = list(set(ticker))
+        try:
+            url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
+            r = requests.get(url, headers=headers)
+            soup = BeautifulSoup(r.text, 'html.parser')
+            stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
+            await message.channel.send("Added %s." % stockName)
+        except:
+            await message.channel.send("Couldn't Find that Stock." % stockName)
+            
+        
 
     elif message.content.startswith('!remove allStocks'):
         messageSplit = message.content.split(' ', 1)
@@ -40,12 +45,16 @@ async def on_message(message):
     elif message.content.startswith('!remove'):
         messageSplit = message.content.split(' ', 1)
         ticker.remove(messageSplit[1].upper())
-        url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
-        r = requests.get(url, headers=headers)
-        soup = BeautifulSoup(r.text, 'html.parser')
-        list(set(ticker))
-        stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
-        await message.channel.send("Removed %s" % stockName)
+        try:
+            url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
+            r = requests.get(url, headers=headers)
+            soup = BeautifulSoup(r.text, 'html.parser')
+            ticker = list(set(ticker))
+            stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
+            await message.channel.send("Removed %s." % stockName)
+        except:
+            await message.channel.send("Couldn't Find That Stock." % stockName)
+            
         
         
     elif message.content.startswith('!help'):
