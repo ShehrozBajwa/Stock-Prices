@@ -34,6 +34,7 @@ async def on_message(message):
                 stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
                 await message.channel.send("Added %s." % stockName)
             except:
+                ticker.remove(messageSplit[1].upper())
                 await message.channel.send("Couldn't Find that Stock.")
         else:
             ticker.remove(messageSplit[1].upper())
