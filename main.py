@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup, BeautifulStoneSoup
 import requests
 
 
-channel_id = '864579823301427221'
+channel_id = 864579823301427221
 client = discord.Client()
 bot_token = 'ODY0MTg1MTcyNzkwMjE0Njk2.YOxxKA.BqqPjCQXf607yV2nXVOZlWfGSUE'
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
