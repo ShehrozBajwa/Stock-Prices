@@ -24,13 +24,13 @@ async def on_message(message):
     elif message.content.startswith('!add'):
         messageSplit = message.content.split(' ', 1)
         ticker.append(messageSplit[1].upper())
-        stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find_all('h1').text
+        stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
         await message.channel.send("Added %s" % stockName)
 
     elif message.content.startswith('!remove'):
         messageSplit = message.content.split(' ', 1)
         ticker.remove(messageSplit[1].upper())
-        stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find_all('h1').text
+        stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
         await message.channel.send("Removed %s" % stockName)
         
     elif message.content.startswith('!remove all'):
@@ -52,7 +52,7 @@ def view():
         stockData = soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('span')
         currPrice = stockData[0].text.strip()
         changeInPrice = stockData[1].text.strip()
-        stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find_all('h1').text
+        stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
         percent = changeInPrice.split('(', 1)[1].split(')')[0]
         percent = percent.strip('%-+')
         percent = float(percent)
