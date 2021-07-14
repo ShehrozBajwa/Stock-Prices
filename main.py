@@ -7,7 +7,7 @@ channel_id = '<@180804112567369728>'
 client = discord.Client()
 bot_token = 'ODY0MTg1MTcyNzkwMjE0Njk2.YOxxKA.BqqPjCQXf607yV2nXVOZlWfGSUE'
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
-ticker = ['GME', 'BB', 'AMC']
+ticker = set(['GME', 'BB', 'AMC'])
 
 @client.event
 async def on_ready():
@@ -27,9 +27,9 @@ async def on_message(message):
         stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
         await message.channel.send("Added %s" % stockName)
 
-    elif message.content.startswith('!remove allstocks'):
+    elif message.content.startswith('!remove allStocks'):
         messageSplit = message.content.split(' ', 1)
-        ticker.clear()
+        ticker.clear() 
         await message.channel.send("Removed All Stocks.")
         
     elif message.content.startswith('!remove'):
@@ -41,7 +41,7 @@ async def on_message(message):
         
     elif message.content.startswith('!help'):
         messageSplit = message.content.split(' ', 1)
-        await message.channel.send("Commands:\n!view - View All Stocks.\n!add - Add a Stock\n!remove - Remove a Stock\n!remove all - Remove All Stocks")
+        await message.channel.send("Commands:\n!view - View All Stocks.\n!add - Add a Stock\n!remove - Remove a Stock\n!remove allStocks - Remove All Stocks")
     
     
 def view():
