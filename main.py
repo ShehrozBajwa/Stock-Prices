@@ -19,7 +19,7 @@ async def on_message(message):
         return
 
     if message.content.startswith('!view'):
-        list(set(ticker))
+        ticker = list(set(ticker))
         await message.channel.send(view())
 
     elif message.content.startswith('!add'):
