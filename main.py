@@ -7,7 +7,7 @@ channel_id = '<@180804112567369728>'
 client = discord.Client()
 bot_token = 'ODY0MTg1MTcyNzkwMjE0Njk2.YOxxKA.BqqPjCQXf607yV2nXVOZlWfGSUE'
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
-ticker = set(['GME', 'BB', 'AMC'])
+ticker = ['GME', 'BB', 'AMC']
 
 @client.event
 async def on_ready():
@@ -19,11 +19,13 @@ async def on_message(message):
         return
 
     if message.content.startswith('!view'):
+        list(set(ticker))
         await message.channel.send(view())
 
     elif message.content.startswith('!add'):
         messageSplit = message.content.split(' ', 1)
         ticker.append(messageSplit[1].upper())
+        list(set(ticker))
         stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
         await message.channel.send("Added %s" % stockName)
 
@@ -35,6 +37,7 @@ async def on_message(message):
     elif message.content.startswith('!remove'):
         messageSplit = message.content.split(' ', 1)
         ticker.remove(messageSplit[1].upper())
+        list(set(ticker))
         stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
         await message.channel.send("Removed %s" % stockName)
         
