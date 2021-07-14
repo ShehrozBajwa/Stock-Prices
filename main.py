@@ -39,7 +39,7 @@ async def on_message(message):
             await message.channel.send("That Stock is Already Added.")
             
           
-    elif message.content.startswith('!remove allStocks'):
+    elif message.content.startswith('!clear'):
         messageSplit = message.content.split(' ', 1)
         ticker.clear() 
         await message.channel.send("Removed All Stocks.")
@@ -58,7 +58,7 @@ async def on_message(message):
         
     elif message.content.startswith('!help'):
         messageSplit = message.content.split(' ', 1)
-        await message.channel.send("Commands:\n\n!view - View All Stocks.\n!add - Add a Stock\n!remove - Remove a Stock\n!remove allStocks - Remove All Stocks")
+        await message.channel.send("Commands:\n\n!view - View All Stocks.\n!add - Add a Stock\n!remove - Remove a Stock\n!clear - Remove All Stocks")
     
     
 def view(ticker):
