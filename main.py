@@ -26,14 +26,20 @@ async def on_message(message):
     elif message.content.startswith('!add'):
         messageSplit = message.content.split(' ', 1)
         ticker.append(messageSplit[1].upper())
-        try:
-            url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
-            r = requests.get(url, headers=headers)
-            soup = BeautifulSoup(r.text, 'html.parser')
-            stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
-            await message.channel.send("Added %s." % stockName)
-        except:
-            await message.channel.send("Couldn't Find that Stock." % stockName)
+        if duplicates(ticker) == false:
+            try:
+                url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
+                r = requests.get(url, headers=headers)
+                soup = BeautifulSoup(r.text, 'html.parser')
+                stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
+                await message.channel.send("Added %s." % stockName)
+            except:
+                await message.channel.send("Couldn't Find that Stock.")
+        else:
+            await message.channel.send("That Stock is Already Added.")
+            
+            
+        
             
         
 
@@ -52,9 +58,7 @@ async def on_message(message):
             stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
             await message.channel.send("Removed %s." % stockName)
         except:
-            await message.channel.send("Couldn't Find That Stock." % stockName)
-            
-        
+            await message.channel.send("Couldn't Find That Stock.")
         
     elif message.content.startswith('!help'):
         messageSplit = message.content.split(' ', 1)
@@ -80,7 +84,12 @@ def view(ticker):
 
 
 def duplicates(ticker):
-    ticker = list(set(ticker))
+    check = list(set(ticker))
+    if len(check) == len(ticker):
+        return false
+        
+    
+                
 
     
 
