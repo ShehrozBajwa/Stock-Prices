@@ -16,7 +16,7 @@ async def on_ready():
     dailyNotification.start()
 
   
-@tasks.loop(seconds=5)
+@tasks.loop(seconds = 5)
 async def dailyNotification():
     channel = client.get_channel(channel_id)
     await channel.send(view(ticker)) 
@@ -34,6 +34,7 @@ async def on_message(message):
 
     elif message.content.startswith('!add'):
         messageSplit = message.content.split(' ', 1)
+        print(message.channel)
         ticker.append(messageSplit[1].upper())
         if duplicates(ticker) == False: 
             try:
