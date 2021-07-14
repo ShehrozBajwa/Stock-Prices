@@ -8,6 +8,8 @@ client = discord.Client()
 bot_token = 'ODY0MTg1MTcyNzkwMjE0Njk2.YOxxKA.BqqPjCQXf607yV2nXVOZlWfGSUE'
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
 ticker = ['GME', 'BB', 'AMC']
+r = requests.get(url, headers=headers)
+soup = BeautifulSoup(r.text, 'html.parser')
 
 @client.event
 async def on_ready():
@@ -44,15 +46,13 @@ async def on_message(message):
         
     elif message.content.startswith('!help'):
         messageSplit = message.content.split(' ', 1)
-        await message.channel.send("Commands:\n!view - View All Stocks.\n!add - Add a Stock\n!remove - Remove a Stock\n!remove allStocks - Remove All Stocks")
+        await message.channel.send("Commands:\n\n!view - View All Stocks.\n!add - Add a Stock\n!remove - Remove a Stock\n!remove allStocks - Remove All Stocks")
     
     
 def view():
     stockPriceOutput  = ""
     for i in range(0, len(ticker)):
         url = 'https://finance.yahoo.com/quote/%s' % ticker[i]
-        r = requests.get(url, headers=headers)
-        soup = BeautifulSoup(r.text, 'html.parser')
         stockData = soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('span')
         currPrice = stockData[0].text.strip()
         changeInPrice = stockData[1].text.strip()
@@ -60,7 +60,7 @@ def view():
         percent = changeInPrice.split('(', 1)[1].split(')')[0]
         percent = percent.strip('%-+')
         percent = float(percent)
-        stockPriceOutput += "%s:\n      Current Price: %s \n        Change in Price: %s \n\n" % (stockName, currPrice, changeInPrice)
+        stockPriceOutput += "%s:\n        Current Price: %s \n        Change in Price: %s \n\n" % (stockName, currPrice, changeInPrice)
     return stockPriceOutput
 
 
