@@ -8,8 +8,6 @@ client = discord.Client()
 bot_token = 'ODY0MTg1MTcyNzkwMjE0Njk2.YOxxKA.BqqPjCQXf607yV2nXVOZlWfGSUE'
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
 ticker = ['GME', 'BB', 'AMC']
-r = requests.get(url, headers=headers)
-soup = BeautifulSoup(r.text, 'html.parser')
 
 @client.event
 async def on_ready():
@@ -28,6 +26,9 @@ async def on_message(message):
         messageSplit = message.content.split(' ', 1)
         ticker.append(messageSplit[1].upper())
         list(set(ticker))
+        url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
+        r = requests.get(url, headers=headers)
+        soup = BeautifulSoup(r.text, 'html.parser')
         stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
         await message.channel.send("Added %s" % stockName)
 
@@ -39,6 +40,9 @@ async def on_message(message):
     elif message.content.startswith('!remove'):
         messageSplit = message.content.split(' ', 1)
         ticker.remove(messageSplit[1].upper())
+        url = 'https://finance.yahoo.com/quote/%s' % messageSplit[1].upper()
+        r = requests.get(url, headers=headers)
+        soup = BeautifulSoup(r.text, 'html.parser')
         list(set(ticker))
         stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
         await message.channel.send("Removed %s" % stockName)
@@ -53,6 +57,8 @@ def view():
     stockPriceOutput  = ""
     for i in range(0, len(ticker)):
         url = 'https://finance.yahoo.com/quote/%s' % ticker[i]
+        r = requests.get(url, headers=headers)
+        soup = BeautifulSoup(r.text, 'html.parser')
         stockData = soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('span')
         currPrice = stockData[0].text.strip()
         changeInPrice = stockData[1].text.strip()
