@@ -27,16 +27,17 @@ async def on_message(message):
         stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
         await message.channel.send("Added %s" % stockName)
 
+    elif message.content.startswith('!remove allstocks'):
+        messageSplit = message.content.split(' ', 1)
+        ticker.clear()
+        await message.channel.send("Removed All Stocks.")
+        
     elif message.content.startswith('!remove'):
         messageSplit = message.content.split(' ', 1)
         ticker.remove(messageSplit[1].upper())
         stockName = soup.find('div', {'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find('h1').text
         await message.channel.send("Removed %s" % stockName)
         
-    elif message.content.startswith('!remove all'):
-        messageSplit = message.content.split(' ', 1)
-        ticker.clear()
-        await message.channel.send("Removed All Stocks.")
         
     elif message.content.startswith('!help'):
         messageSplit = message.content.split(' ', 1)
@@ -56,7 +57,7 @@ def view():
         percent = changeInPrice.split('(', 1)[1].split(')')[0]
         percent = percent.strip('%-+')
         percent = float(percent)
-        stockPriceOutput += "%s:\n    Current Price: %s \n    Change in Price: %s \n\n" % (stockName, currPrice, changeInPrice)
+        stockPriceOutput += "%s:\n      Current Price: %s \n        Change in Price: %s \n\n" % (stockName, currPrice, changeInPrice)
     return stockPriceOutput
 
 
