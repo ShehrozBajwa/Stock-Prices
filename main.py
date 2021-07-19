@@ -16,7 +16,7 @@ async def on_ready():
     dailyNotification.start()
 
   
-@tasks.loop(seconds = 60)
+@tasks.loop(hours = 24)
 async def dailyNotification():
     channel = client.get_channel(channel_id)
     await channel.send(view(ticker)) 
