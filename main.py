@@ -13,13 +13,13 @@ ticker = ['GME', 'BB', 'AMC']
 @client.event
 async def on_ready():
     print('Bot Ready.')
-    #dailyNotification.start()
+    dailyNotification.start()
 
   
-#@tasks.loop(hours = 24)
-#async def dailyNotification():
-#    channel = client.get_channel(channel_id)
-#    await channel.send(view(ticker)) 
+@tasks.loop(seconds = 60)
+async def dailyNotification():
+    channel = client.get_channel(channel_id)
+    await channel.send(view(ticker)) 
     
     
 @client.event
