@@ -14,7 +14,7 @@ ticker = ['GME', 'BB', 'AMC']
 async def on_ready():
     print('Bot Ready.')
     dailyNotification.start()
-    ticker = read_file()
+    #ticker = read_file()
 
   
 @tasks.loop(hours = 24)
