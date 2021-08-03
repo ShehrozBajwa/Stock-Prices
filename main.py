@@ -1,4 +1,4 @@
-import discord, asyncpg, datetime
+import discord, asyncpg, datetime, json
 from discord.ext import tasks, commands
 from bs4 import BeautifulSoup, BeautifulStoneSoup
 import requests
@@ -14,6 +14,7 @@ ticker = ['GME', 'BB', 'AMC']
 async def on_ready():
     print('Bot Ready.')
     dailyNotification.start()
+    ticker = read_file()
 
   
 @tasks.loop(hours = 24)
@@ -24,8 +25,6 @@ async def dailyNotification():
     
 @client.event
 async def on_message(message):
-    duplicates(ticker)
-    
     if message.author == client.user:
         return
 
@@ -52,7 +51,7 @@ async def on_message(message):
           
     elif message.content.startswith('!clear'):
         messageSplit = message.content.split(' ', 1)
-        ticker.clear() 
+        ticker.clear()
         await message.channel.send("Removed All Stocks.")
         
     elif message.content.startswith('!remove'):
@@ -70,6 +69,7 @@ async def on_message(message):
     elif message.content.startswith('!help'):
         messageSplit = message.content.split(' ', 1)
         await message.channel.send("Commands:\n\n!view - View All Stocks.\n!add - Add a Stock\n!remove - Remove a Stock\n!clear - Remove All Stocks")
+    write_file()
     
     
 def view(ticker):
@@ -97,6 +97,17 @@ def duplicates(ticker):
     else:
         ticker = list(set(ticker))
         return True
+      
+def write_file():
+    with open("data.json", w) as file:
+        json.dump(ticker, write)
+        file.close()
+
+def read_file():
+    with open("data.json") as file:
+        ticker = json.load(file)
+        file.close()
+        return ticker
         
     
                 
