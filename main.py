@@ -106,6 +106,7 @@ def write_file():
 def read_file():
     with open("data.json") as file:
         ticker = json.load(file)
+        print(ticker)
         file.close()
         return ticker
         
