@@ -69,7 +69,7 @@ async def on_message(message):
     elif message.content.startswith('!help'):
         messageSplit = message.content.split(' ', 1)
         await message.channel.send("Commands:\n\n!view - View All Stocks.\n!add - Add a Stock\n!remove - Remove a Stock\n!clear - Remove All Stocks")
-    write_file()
+    write_file(ticker)
     
     
 def view(ticker):
@@ -98,7 +98,7 @@ def duplicates(ticker):
         ticker = list(set(ticker))
         return True
       
-def write_file():
+def write_file(ticker):
     with open("data.json", 'w') as file:
         json.dump(ticker, file)
         print(json.dump(ticker, file))
