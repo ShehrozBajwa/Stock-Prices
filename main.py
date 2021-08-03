@@ -101,7 +101,7 @@ def duplicates(ticker):
 def write_file(ticker):
     with open("data.json", 'w') as file:
         json.dump(ticker, file)
-        print(json.dump(ticker, file))
+        print(ticker)
         print("HIII")
         file.close()
 
