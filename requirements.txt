@@ -1,5 +1,5 @@
 discord.py
-requests~=2.26.0
+requests
 asyncpg~=0.23.0
-discord~=1.7.3
+discord
 beautifulsoup4~=4.9.3
