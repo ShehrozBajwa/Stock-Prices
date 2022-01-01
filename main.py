@@ -138,7 +138,8 @@ def read_file():
 
 
 def import_stocks():
-    dynamodb = boto3.resource('dynamodb', region_name='us-east-2')
+    dynamodb = boto3.resource('dynamodb', aws_access_key_id= os.getenv('ACCESS_ID'),
+         aws_secret_access_key= os.getenv('ACCESS_KEY'), region_name='us-east-2')
     try:
         table = dynamodb.Table("Stocks")
         data = table.scan()
@@ -148,7 +149,8 @@ def import_stocks():
 
 
 def export_stocks():
-    dynamodb = boto3.resource('dynamodb', region_name='us-east-2')
+    dynamodb = boto3.resource('dynamodb', aws_access_key_id= os.getenv('ACCESS_ID'),
+         aws_secret_access_key= os.getenv('ACCESS_KEY'), region_name='us-east-2')
     table = dynamodb.Table("Stocks")
     try:
         table.delete()
