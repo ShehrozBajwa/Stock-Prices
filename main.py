@@ -1,29 +1,41 @@
-import discord, asyncpg, datetime, json
-from discord.ext import tasks, commands
-from bs4 import BeautifulSoup, BeautifulStoneSoup
+from datetime import date, datetime
+import boto3
+import discord
+import json
+import os
 import requests
+from bs4 import BeautifulSoup
+from discord.ext import tasks
+from dotenv import load_dotenv
 
+load_dotenv()
 channel_id = 864963943164149811
 client = discord.Client()
-bot_token = 'ODY0MTg1MTcyNzkwMjE0Njk2.YOxxKA.BqqPjCQXf607yV2nXVOZlWfGSUE'
+bot_token = os.getenv('BOT_TOKEN')
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'}
-ticker = ['GME', 'BB', 'AMC']
+ticker = []
 
 
 @client.event
 async def on_ready():
     print('Bot Ready.')
-    dailyNotification.start()
-    ticker.clear()
-    for i in range(0, len(read_file())):
-        ticker.append(read_file()[i])
+    hello = import_stocks()
+    for i in hello:
+        ticker.append(list(i.values())[0])
+    write_file(ticker)
+    if not dailyNotification.is_running():
+        dailyNotification.start()
 
 
-@tasks.loop(hours=24)
+@tasks.loop(minutes=1)
 async def dailyNotification():
-    channel = client.get_channel(channel_id)
-    await channel.send(view(ticker))
+    today = date.today()
+    time = datetime.now()
+    current_time = time.strftime("%H:%M")
+    if today.weekday() <= 4 and current_time == '16:00':
+        channel = client.get_channel(channel_id)
+        await channel.send(view(ticker))
 
 
 @client.event
@@ -77,27 +89,31 @@ async def on_message(message):
         await message.channel.send(
             "Commands:\n\n!view - View All Stocks.\n!add - Add a Stock\n!remove - Remove a Stock\n!clear - Remove All Stocks")
     write_file(ticker)
+    export_stocks()
 
 
 def view(ticker):
-    stockPriceOutput = ""
-    ticker = list(set(ticker))
-    for i in range(0, len(ticker)):
-        url = 'https://finance.yahoo.com/quote/%s' % ticker[i]
-        r = requests.get(url, headers=headers)
-        soup = BeautifulSoup(r.text, 'html.parser')
-        stockData = soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('span')
-        currPrice = stockData[0].text.strip()
-        changeInPrice = stockData[1].text.strip()
-        stockName = soup.find('div', {
-            'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find(
-            'h1').text
-        percent = changeInPrice.split('(', 1)[1].split(')')[0]
-        percent = percent.strip('%-+')
-        percent = float(percent)
-        stockPriceOutput += "%s:\n        Current Price: %s \n        Change in Price: %s \n\n" % (
-            stockName, currPrice, changeInPrice)
-    return stockPriceOutput
+    if len(ticker) != 0:
+        stockPriceOutput = ""
+        ticker = list(set(ticker))
+        for i in range(0, len(ticker)):
+            url = 'https://finance.yahoo.com/quote/%s' % ticker[i]
+            r = requests.get(url, headers=headers)
+            soup = BeautifulSoup(r.text, 'html.parser')
+            stockData = soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('span')
+            currPrice = stockData[0].text.strip()
+            changeInPrice = stockData[1].text.strip()
+            stockName = soup.find('div', {
+                'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find(
+                'h1').text
+            percent = changeInPrice.split('(', 1)[1].split(')')[0]
+            percent = percent.strip('%-+')
+            percent = float(percent)
+            stockPriceOutput += "%s:\n        Current Price: %s \n        Change in Price: %s \n\n" % (
+                stockName, currPrice, changeInPrice)
+        return stockPriceOutput
+    else:
+        return "List is Empty."
 
 
 def duplicates(ticker):
@@ -105,7 +121,6 @@ def duplicates(ticker):
     if len(check) == len(ticker):
         return False
     else:
-        ticker = list(set(ticker))
         return True
 
 
@@ -120,6 +135,46 @@ def read_file():
         ticker = json.load(file)
         file.close()
         return ticker
+
+
+def import_stocks():
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-2')
+    try:
+        table = dynamodb.Table("Stocks")
+        data = table.scan()
+        return data['Items']
+    except dynamodb.meta.client.exceptions.ResourceNotFoundException:
+        pass
+
+
+def export_stocks():
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-2')
+    table = dynamodb.Table("Stocks")
+    try:
+        table.delete()
+        table.wait_until_not_exists()
+    except dynamodb.meta.client.exceptions.ResourceNotFoundException:
+        pass
+    ticker = read_file()
+    table = dynamodb.create_table(
+        TableName='Stocks',
+        KeySchema=[{
+            'AttributeName': 'stockName',
+            'KeyType': 'HASH'
+        }],
+        AttributeDefinitions=[{
+            'AttributeName': 'stockName',
+            'AttributeType': 'S'
+        }],
+        ProvisionedThroughput={
+            'ReadCapacityUnits': len(ticker) + 1,
+            'WriteCapacityUnits': len(ticker) + 1
+        })
+    table.wait_until_exists()
+    for i in range(0, len(ticker)):
+        table.put_item(Item={
+            'stockName': ticker[i]
+        })
 
 
 client.run(bot_token)
