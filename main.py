@@ -27,6 +27,7 @@ async def on_ready():
     if not dailyNotification.is_running():
         dailyNotification.start()
 
+        
 
 @tasks.loop(minutes=1)
 async def dailyNotification():
@@ -36,6 +37,11 @@ async def dailyNotification():
     if today.weekday() <= 4 and current_time == '16:00':
         channel = client.get_channel(channel_id)
         await channel.send(view(ticker))
+    if current_time == '01:00':
+        write_file(ticker)
+        export_stocks()
+        sys.exit()
+        
 
 
 @client.event
@@ -88,8 +94,6 @@ async def on_message(message):
         messageSplit = message.content.split(' ', 1)
         await message.channel.send(
             "Commands:\n\n!view - View All Stocks.\n!add - Add a Stock\n!remove - Remove a Stock\n!clear - Remove All Stocks")
-    write_file(ticker)
-    export_stocks()
 
 
 def view(ticker):
