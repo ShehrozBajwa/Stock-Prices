@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, sys
 import boto3
 import discord
 import json
@@ -20,8 +20,8 @@ ticker = []
 @client.event
 async def on_ready():
     print('Bot Ready.')
-    hello = import_stocks()
-    for i in hello:
+    importAWS = import_stocks()
+    for i in importAWS:
         ticker.append(list(i.values())[0])
     write_file(ticker)
     if not dailyNotification.is_running():
@@ -34,10 +34,10 @@ async def dailyNotification():
     today = date.today()
     time = datetime.now()
     current_time = time.strftime("%H:%M")
-    if today.weekday() <= 4 and current_time == '16:00':
+    if today.weekday() <= 4 and current_time == '21:00':
         channel = client.get_channel(channel_id)
         await channel.send(view(ticker))
-    if current_time == '01:00':
+    if current_time == '05:00':
         write_file(ticker)
         export_stocks()
         sys.exit()
