@@ -104,17 +104,15 @@ def view(ticker):
             url = 'https://finance.yahoo.com/quote/%s' % ticker[i]
             r = requests.get(url, headers=headers)
             soup = BeautifulSoup(r.text, 'html.parser')
-            stockData = soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all('span')
+            stockData = soup.find('div', {'class': 'D(ib) Mend(20px)'}).find_all()
             currPrice = stockData[0].text.strip()
             changeInPrice = stockData[1].text.strip()
+            percent = stockData[3].text.strip()
             stockName = soup.find('div', {
                 'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find(
                 'h1').text
-            percent = changeInPrice.split('(', 1)[1].split(')')[0]
-            percent = percent.strip('%-+')
-            percent = float(percent)
-            stockPriceOutput += "%s:\n        Current Price: %s \n        Change in Price: %s \n\n" % (
-                stockName, currPrice, changeInPrice)
+            stockPriceOutput += "%s:\n        Current Price: %s \n        Change in Price: %s %s \n\n" % (
+                stockName, currPrice, changeInPrice, percent)
         return stockPriceOutput
     else:
         return "List is Empty."
