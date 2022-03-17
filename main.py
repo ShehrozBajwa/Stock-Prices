@@ -109,7 +109,7 @@ def view(ticker):
             changeInPrice = stockData[1].text.strip()
             percent = stockData[3].text.strip()
             stockName = soup.find('div', {
-                'class': 'D(ib) Mt(-5px) Mend(20px) Maw(56%)--tab768 Maw(52%) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find(
+                'class': 'D(ib) Mt(-5px) Maw(38%)--tab768 Maw(38%) Mend(10px) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)'}).find(
                 'h1').text
             stockPriceOutput += "%s:\n        Current Price: %s \n        Change in Price: %s %s \n\n" % (
                 stockName, currPrice, changeInPrice, percent)
