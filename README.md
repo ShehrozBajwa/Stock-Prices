@@ -25,5 +25,3 @@ Technologies and Platforms Used:
 - BeautifulSoup for parsing HTML and XML files
 - Requests to send requests to the HTML server
 - Discord API to get user commands and send messages
-
-
